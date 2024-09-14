@@ -1,0 +1,19 @@
+# Instrucciones de como subir imagenes
+version: '3' # tipo de version del archivo
+
+services:
+  # primer servicio
+  todosDB:
+    image: postgres:15.3 # imagen de postgres
+    container_name: todos-db # nombre que le damos al container / dns
+    restart: always # levanta la BD siempre
+    ports:
+      - 5432:5432 # conecta el puerto del container con el del equipo
+    environment: # variables del ambiente del container
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes: # conecta una carpeta del container con el del equipo
+      - ./postgres:/var/lib/postgresql/data 
+
+# ejecucion
+# docker compose up --d
