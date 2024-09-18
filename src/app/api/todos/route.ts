@@ -36,7 +36,7 @@ export async function POST(request: Request) {
         const todo = await prisma.todo.create({
             data: { complete, description }
         })
-        return NextResponse.json(todo)
+        return NextResponse.json(todo, { status: 201 })
     } catch (error) {
         return NextResponse.json({
             error
