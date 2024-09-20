@@ -2,6 +2,21 @@ import React from 'react'
 import { CiBookmarkCheck, CiLogout } from 'react-icons/ci'
 import SidebarItem from './SidebarItem'
 import Image from 'next/image'
+import { IoCalendar, IoCheckboxOutline, IoListOutline } from 'react-icons/io5'
+
+const menuItems = [{
+  icon: <IoCalendar />,
+  path: '/dashboard',
+  label: 'Dashboard'
+}, {
+  icon: <IoCheckboxOutline />,
+  path: '/dashboard/rest-todos',
+  label: 'REST Todos'
+}, {
+  icon: <IoListOutline />,
+  path: '/dashboard/server-actions',
+  label: 'Server Actions'
+}]
 
 export default function Sidebar() {
   return (
@@ -33,8 +48,7 @@ export default function Sidebar() {
         </div>
 
         <ul className="space-y-2 tracking-wide mt-8">
-          <SidebarItem label="Dashboard" isActive={true} />
-          <SidebarItem label="Categories" isActive={false} />
+          {menuItems.map(item => (<SidebarItem key={item.path} {...item}/>))}
         </ul>
       </div>
 
