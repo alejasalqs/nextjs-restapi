@@ -1,9 +1,10 @@
 'use client'
 
 import { Todo } from '@prisma/client'
-import React from 'react'
+import React, { startTransition, useOptimistic } from 'react'
 import styles from './TodoItem.module.css'
 import { IoCheckboxOutline, IoSquareOutline } from 'react-icons/io5'
+import { boolean } from 'yup'
 
 interface Props {
     todo: Todo
@@ -11,20 +12,34 @@ interface Props {
 }
 
 export const TodoItem = ({ todo, toggleTodo }: Props) => {
+  const [todoOptimistic, toggleTodoOptimistic ]= useOptimistic(
+    todo,
+    (state, newCompleteValue: boolean) => ({...state, complete: newCompleteValue}) // funcion que cambia la data del todo
+  )
+
+  const onToggleTodo = async () => {
+    try {
+      startTransition(() => toggleTodoOptimistic(!todoOptimistic.complete))
+      await toggleTodo(todoOptimistic.id, !todoOptimistic.complete)
+    } catch (error) {
+      startTransition(() => toggleTodoOptimistic(!todoOptimistic.complete))
+    }
+  }
   return (
-    <div className={todo.complete ? styles.todoDone : styles.todoPending}>
+    <div className={todoOptimistic.complete ? styles.todoDone : styles.todoPending}>
       <div 
-        onClick={() => toggleTodo(todo.id, !todo.complete)}
+        // onClick={() => toggleTodo(todoOptimistic.id, !todoOptimistic.complete)}
+        onClick={onToggleTodo}
         className='flex flex-col sm:flex-row justify-start items-center gap-4'>
         <div className={`
             flex p-2 rounded-md cursor-pointer
             hover:bg-opacity-60
-            ${todo.complete ? 'bg-blue-100' : 'bg-red-100'}
+            ${todoOptimistic.complete ? 'bg-blue-100' : 'bg-red-100'}
         `}>
-            {todo.complete ? <IoCheckboxOutline size={30}/> : <IoSquareOutline />}
+            {todoOptimistic.complete ? <IoCheckboxOutline size={30}/> : <IoSquareOutline />}
         </div>
         <div className='text-center sm:text-left'>
-            {todo.description}
+            {todoOptimistic.description}
         </div>
       </div>
     </div>

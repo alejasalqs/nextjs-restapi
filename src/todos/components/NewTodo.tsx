@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 import { createTodo, deleteCompletedTodos } from "../helpers/todos";
 import { useRouter } from "next/navigation";
+import { addTodo, deletedTodo } from "../actions/todo-actions";
 
 
 export const NewTodo = () => {
@@ -14,14 +15,15 @@ export const NewTodo = () => {
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (description.trim().length === 0) return
-        await createTodo(description)
-        router.refresh()
+        await addTodo(description)
+        // router.refresh()
         setDescription('')
     }
 
     const onDeleteTodos = async () => {
-        await deleteCompletedTodos()
-        router.refresh()
+        // await deleteCompletedTodos()
+        // router.refresh()
+        await deletedTodo();
     }
 
     return (
