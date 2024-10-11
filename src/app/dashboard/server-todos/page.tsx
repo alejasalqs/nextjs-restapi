@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic' // fuerza una revalidacion de data
+export const revalidate = 0 // se asegura que siempre sea dinamicamente generada
+
 import prisma from "@/lib/prisma";
 import { NewTodo, TodosGrid } from "@/todos";
 
