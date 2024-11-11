@@ -1,8 +1,8 @@
 import React from 'react'
-import { CiBookmarkCheck, CiLogout } from 'react-icons/ci'
+import { CiLogout } from 'react-icons/ci'
 import SidebarItem from './SidebarItem'
 import Image from 'next/image'
-import { IoCalendar, IoCheckboxOutline, IoListOutline } from 'react-icons/io5'
+import { IoCalendar, IoCheckboxOutline, IoCode, IoListOutline } from 'react-icons/io5'
 
 const menuItems = [{
   icon: <IoCalendar />,
@@ -16,6 +16,10 @@ const menuItems = [{
   icon: <IoListOutline />,
   path: '/dashboard/server-todos',
   label: 'Server Actions'
+}, {
+  icon: <IoCode />,
+  path: '/dashboard/cookies',
+  label: 'Cookies'
 }]
 
 export default function Sidebar() {
