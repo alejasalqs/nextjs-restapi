@@ -1,7 +1,18 @@
+import { cookies } from 'next/headers'
 import React from 'react'
-import { CiBellOn, CiChat1, CiMenuBurger, CiSearch } from 'react-icons/ci'
+import { CiChat1, CiMenuBurger, CiSearch, CiShoppingBasket } from 'react-icons/ci'
 
-export default function TopMenu() {
+const getTotalCount = (cart: {[id: string]: number}): number => {
+    let items = 0
+    Object.values(cart).forEach(value => items += value)
+    return items
+}
+
+export default async function TopMenu() {
+    const cookieStore = await cookies()
+    const cart = JSON.parse(cookieStore.get('cart')?.value ?? '{}') as {[id: string]: number}
+    const totalCount = getTotalCount(cart);
+
     return (
         <div className="sticky z-10 top-0 h-16 border-b bg-white lg:py-2.5">
 
@@ -22,13 +33,14 @@ export default function TopMenu() {
                     </div>
 
                     <button className="flex items-center justify-center w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200 md:hidden">
-                        <CiSearch />
+                        <CiSearch color='black' />
                     </button>
                     <button className="flex items-center justify-center w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
-                        <CiChat1 size={25} />
+                        <CiChat1 size={25} color='black' />
                     </button>
-                    <button className="flex items-center justify-center w-10 h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
-                        <CiBellOn size={25} />
+                    <button className="p-2 flex items-center justify-center h-10 rounded-xl border bg-gray-100 focus:bg-gray-100 active:bg-gray-200">
+                        {totalCount > 0 && <span className='text-sm mr-2 text-sky-600 font-bold'>{totalCount}</span>}
+                        <CiShoppingBasket size={25} color='black' />
                     </button>
                 </div>
             </div>
