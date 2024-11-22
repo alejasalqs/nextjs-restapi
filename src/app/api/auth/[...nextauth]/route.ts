@@ -1,11 +1,17 @@
 import NextAuth, { NextAuthOptions } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google";
 
 // This is for the /app folder config
 export const authOptions: NextAuthOptions = {
     // define providers here
     // Configure one or more authentication providers
   providers: [
+    // El orden de como se define aqui, es como va a aparecer en e UI
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? ''
+    }),
     GithubProvider({
       clientId: process.env.GITHUB_ID ?? '',
       clientSecret: process.env.GITHUB_SECRET ?? '',
