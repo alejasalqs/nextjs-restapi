@@ -1,10 +1,10 @@
 import React from 'react'
-import { CiLogout } from 'react-icons/ci'
 import SidebarItem from './SidebarItem'
 import Image from 'next/image'
 import { IoBasketOutline, IoCalendar, IoCheckboxOutline, IoCode, IoListOutline, IoPerson } from 'react-icons/io5'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import LogAuthButton from './LogAuthButton'
 
 const menuItems = [{
   icon: <IoCalendar />,
@@ -69,10 +69,7 @@ export default async function Sidebar() {
       </div>
 
       <div className="px-6 -mx-6 pt-4 flex justify-between items-center border-t">
-        <button className="px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group">
-          <CiLogout />
-          <span className="group-hover:text-gray-700">Logout</span>
-        </button>
+        <LogAuthButton />
       </div>
     </aside>
   )
