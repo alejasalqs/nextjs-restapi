@@ -3,7 +3,6 @@
 
 import prisma from "@/lib/prisma"
 import { Todo } from "@prisma/client"
-import { rejects } from "assert"
 import { revalidatePath } from "next/cache"
 
 export const sleep =  async (seconds: number = 0) => {
@@ -34,10 +33,10 @@ export const toggleTodo =  async (id: string, complete: boolean): Promise<Todo> 
     return updateTodo
 }
 
-export const addTodo = async (description: string): Promise<any> => {
+export const addTodo = async (description: string, userId: string): Promise<Todo | string> => {
     try {
         const todo = await prisma.todo.create({
-            data: { description }
+            data: { description, userId }
         })
         revalidatePath('/dashboard/server-todos')
         return todo
