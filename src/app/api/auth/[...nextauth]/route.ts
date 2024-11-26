@@ -4,13 +4,15 @@ import NextAuth, { NextAuthOptions } from "next-auth"
 import { Adapter } from "next-auth/adapters";
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { sigInEmailPassword } from '@/auth/actions/auth-actions'
 
 // This is for the /app folder config
 export const authOptions: NextAuthOptions = {
   // auth.js/prisma adaptar
   adapter: PrismaAdapter(prisma) as Adapter,
-    // define providers here
-    // Configure one or more authentication providers
+  // define providers here
+  // Configure one or more authentication providers
   providers: [
     // El orden de como se define aqui, es como va a aparecer en e UI
     GoogleProvider({
@@ -22,6 +24,32 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET ?? '',
     }),
     // ...add more providers here
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        // Add logic here to look up the user from the credentials supplied
+        const user = await sigInEmailPassword(credentials!.email, credentials!.password)
+
+        if (user) {
+          // Any object returned will be saved in `user` property of the JWT
+          return user
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          return null
+
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        }
+      }
+    })
   ],
   session: {
     // metodo de autenticacion
@@ -46,7 +74,6 @@ export const authOptions: NextAuthOptions = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async session({ session, token, user }) {
       // retorna session modificada
-      console.log(token)
       if (session && session.user) {
         session.user.roles = token.roles
         session.user.id = token.id
